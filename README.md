@@ -18,6 +18,16 @@ Please keep in mind that in the spirit of Readme-driven-development, this list o
 If this seems like a pretty short list of features, it's also an achievable set of features for a 1.0 release.
 
 
+## Installation
+
+1. Clone this repo
+2. `make install`
+
+To uninstall:
+
+1. `make uninstall`
+
+
 ## TODO
 
 MVP features:
