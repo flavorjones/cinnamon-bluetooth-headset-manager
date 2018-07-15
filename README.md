@@ -20,20 +20,10 @@ If this seems like a pretty short list of features, it's also an achievable set 
 
 ## TODO
 
-learn:
-
-- [x] how to list connected, paired, trusted bluetooth devices
-- [x] how to get notified when bluetooth devices are added/leave
-- [x] how to set a profile for a device
-- [x] how to show/hide the icon (depending on connected devices)
-- [x] how to change the icon
-- [x] how to get notified when user clicks
-
-
 MVP features:
 
-- [ ] enabled when a bluetooth headset is connected
-- [ ] disabled when no bluetooth headset is connected
+- [x] enabled when a bluetooth headset is connected
+- [x] disabled when no bluetooth headset is connected
 
 - [ ] set profile to A2DP when a headset is connected
 - [ ] set default sink when profile is set to A2DP

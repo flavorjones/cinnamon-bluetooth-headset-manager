@@ -1,6 +1,6 @@
 const Applet = imports.ui.applet;
-const Util = imports.misc.util;
 const GnomeBluetooth = imports.gi.GnomeBluetooth;
+const Lang = imports.lang;
 
 function BluetoothHeadsetManager(metadata, orientation, panel_height, instance_id) {
   this._init(metadata, orientation, panel_height, instance_id);
@@ -15,8 +15,26 @@ BluetoothHeadsetManager.prototype = {
     this._client = new GnomeBluetooth.Client();
     this._model = this._client.get_model();
 
-    this.set_applet_icon_name(metadata["icon"]);
-    this.set_applet_tooltip(_("OHAI"));
+    this._model.connect('row-changed', Lang.bind(this, this._setState));
+    this._model.connect('row-deleted', Lang.bind(this, this._setState));
+    this._model.connect('row-inserted', Lang.bind(this, this._setState));
+
+    this._setState();
+  },
+
+  _setState: function() {
+    if (this._isRelevantDevicePaired()) {
+      this.set_applet_enabled(true);
+      this.set_applet_icon_name("audio-headphones");
+    } else {
+      this.set_applet_enabled(false);
+    }
+  },
+
+  _isRelevantDevicePaired: function() {
+    let connected_devices = this._getConnectedDevices();
+    global.log(JSON.stringify(connected_devices));
+    return (connected_devices.length > 0);
   },
 
   _getDefaultAdapter: function() {
@@ -24,6 +42,7 @@ BluetoothHeadsetManager.prototype = {
     while (ret) {
       let isDefault = this._model.get_value(iter, GnomeBluetooth.Column.DEFAULT);
       let isPowered = this._model.get_value(iter, GnomeBluetooth.Column.POWERED);
+
       if (isDefault && isPowered) {
         return iter;
       }
@@ -32,42 +51,35 @@ BluetoothHeadsetManager.prototype = {
     return null;
   },
 
-  _get_connected_devices: function() {
-    let nDevices = 0;
+  _getConnectedDevices: function() {
     let connected_devices = new Array();
 
     let adapter = this._getDefaultAdapter();
-    if (!adapter)
-      return [-1, connected_devices];
+    if (!adapter) {
+      return connected_devices;
+    }
 
     let [ret, iter] = this._model.iter_children(adapter);
     while (ret) {
       let isConnected = this._model.get_value(iter, GnomeBluetooth.Column.CONNECTED);
       let isPaired = this._model.get_value(iter, GnomeBluetooth.Column.PAIRED);
       let isTrusted = this._model.get_value(iter, GnomeBluetooth.Column.TRUSTED);
-      if (isConnected && isPaired && isTrusted) {
+      let deviceType = this._model.get_value(iter, GnomeBluetooth.Column.TYPE);
+
+      if (isConnected && isPaired && isTrusted
+          && (deviceType == GnomeBluetooth.Type.HEADPHONES
+              || deviceType == GnomeBluetooth.Type.HEADSET)
+         ) {
         let name = this._model.get_value(iter, GnomeBluetooth.Column.NAME);
-        connected_devices.push(name);
-        nDevices++;
+        let address = this._model.get_value(iter, GnomeBluetooth.Column.ADDRESS);
+        connected_devices.push([name, address]);
       }
       ret = this._model.iter_next(iter);
     }
 
-    return [nDevices, connected_devices];
+    return connected_devices;
   },
-
-  on_applet_clicked: function() {
-    global.log("here we go ...");
-
-    let [nDevices, connected_devices] = this._get_connected_devices();
-    global.log("found " + nDevices + " devices:");
-    for (var j = 0 ; j < nDevices ; j++) {
-      global.log(connected_devices[j])
-    }
-
-    global.log("... done");
-  }
-};
+}
 
 function main(metadata, orientation, panel_height, instance_id) {
   return new BluetoothHeadsetManager(metadata, orientation, panel_height, instance_id);
