@@ -25,12 +25,14 @@ MVP features:
 - [x] enabled when a bluetooth headset is connected
 - [x] disabled when no bluetooth headset is connected
 
-- [ ] set profile to A2DP when a headset is connected
+- [x] set mode to A2DP when a headset is connected, set tooltip
+- [x] set mode to HSP when icon is clicked, set tooltip
+
+- [ ] set profile to A2DP when mode is A2DP
 - [ ] set default sink when profile is set to A2DP
 - [ ] display visually-distinct icon when profile is set to A2DP
-- [ ] display tooltip when profile is set to A2DP
 
-- [ ] set profile to HSP when icon is clicked
+- [ ] set profile to HSP when mode is HSP
 - [ ] set default sink when profile is set to HSP
 - [ ] set default source when profile is set to HSP
 - [ ] display visually-distinct icon when profile is set to HSP

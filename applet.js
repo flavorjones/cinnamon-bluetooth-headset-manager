@@ -22,19 +22,42 @@ BluetoothHeadsetManager.prototype = {
     this._setState();
   },
 
-  _setState: function() {
-    if (this._isRelevantDevicePaired()) {
-      this.set_applet_enabled(true);
-      this.set_applet_icon_name("audio-headphones");
-    } else {
-      this.set_applet_enabled(false);
+  on_applet_clicked: function() {
+    this._setState();
+  },
+
+  _mode: null,
+
+  _modes: {
+    "a2dp": {
+      "tooltip": "A2DP",
+    },
+    "hsp": {
+      "tooltip": "HSP",
     }
   },
 
-  _isRelevantDevicePaired: function() {
+  _setState: function() {
+    let relevant_device = this._relevantPairedDevice();
+    if (relevant_device == null) {
+      this.set_applet_enabled(false);
+      this._mode = null ;
+      return;
+    }
+
+    if (this._mode == null || this._mode == this._modes["hsp"]) {
+      this._mode = this._modes["a2dp"];
+    } else {
+      this._mode = this._modes["hsp"];
+    }
+    this.set_applet_tooltip(relevant_device[0] + ": " + this._mode["tooltip"]);
+    this.set_applet_icon_name("audio-headphones");
+    this.set_applet_enabled(true);
+  },
+
+  _relevantPairedDevice: function() {
     let connected_devices = this._getConnectedDevices();
-    global.log(JSON.stringify(connected_devices));
-    return (connected_devices.length > 0);
+    return connected_devices[0];
   },
 
   _getDefaultAdapter: function() {
