@@ -3,6 +3,14 @@ const GnomeBluetooth = imports.gi.GnomeBluetooth;
 const Lang = imports.lang;
 const Util = imports.misc.util;
 
+function _sleep(ms) {
+    var date = Date.now();
+    var curDate = null;
+    do {
+        curDate = Date.now();
+    } while (curDate-date < ms);
+}
+
 function BluetoothHeadsetManager(metadata, orientation, panel_height, instance_id) {
   this._init(metadata, orientation, panel_height, instance_id);
 }
@@ -35,12 +43,14 @@ BluetoothHeadsetManager.prototype = {
       "tooltip": "A2DP",
       "icon": "audio-headphones",
       "profile-name": "a2dp_sink",
+      "has-source": false,
     },
     "hsp": {
       "name": "hsp",
       "tooltip": "HSP",
       "icon": "audio-headset-symbolic",
       "profile-name": "headset_head_unit",
+      "has-source": true,
     }
   },
 
@@ -62,7 +72,16 @@ BluetoothHeadsetManager.prototype = {
       }
     }
 
-    this._setCardProfile(this._mode, relevant_device);
+    let commands = new Array()
+    this._cmdCardProfile(this._mode, relevant_device, commands);
+    this._cmdDefaultSink(this._mode, relevant_device, commands);
+    this._cmdDefaultSource(this._mode, relevant_device, commands);
+
+    for (var j in commands) {
+      global.log("CMD: '" + commands[j] + "'");
+      Util.spawnCommandLine(commands[j]);
+      _sleep(100);
+    }
 
     this.set_applet_tooltip(relevant_device[0] + ": " + this._mode["tooltip"]);
     this.set_applet_icon_symbolic_name(this._mode["icon"]);
@@ -117,13 +136,32 @@ BluetoothHeadsetManager.prototype = {
     return connected_devices;
   },
 
-  _setCardProfile: function(mode, relevant_device) {
+  _cmdCardProfile: function(mode, relevant_device, commands) {
     let address = relevant_device[1];
     let card_name = "bluez_card." + address.replace(/:/g, "_");
     let command = ["pacmd", "set-card-profile", card_name, mode["profile-name"]];
-    global.log(JSON.stringify(command));
-    Util.spawn(command);
-  }
+    commands.push(command.join(" "));
+    return;
+  },
+
+  _cmdDefaultSink: function(mode, relevant_device, commands) {
+    let address = relevant_device[1];
+    let sink_name = "bluez_sink." + address.replace(/:/g, "_") + "." + mode["profile-name"];
+    let command = ["pacmd", "set-default-sink", sink_name];
+    commands.push(command.join(" "));
+    return;
+  },
+
+  _cmdDefaultSource: function(mode, relevant_device, commands) {
+    if (! this._mode["has-source"]) {
+      return;
+    }
+    let address = relevant_device[1];
+    let source_name = "bluez_source." + address.replace(/:/g, "_") + "." + mode["profile-name"];
+    let command = ["pacmd", "set-default-source", source_name];
+    commands.push(command.join(" "));
+    return;
+  },
 }
 
 function main(metadata, orientation, panel_height, instance_id) {

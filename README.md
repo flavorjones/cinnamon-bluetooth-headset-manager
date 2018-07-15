@@ -30,12 +30,12 @@ MVP features:
 
 - [x] display visually-distinct icon when mode is set to A2DP
 - [x] set profile to A2DP when mode is A2DP
-- [ ] set default sink when profile is set to A2DP
+- [x] set default sink when profile is set to A2DP
 
 - [x] display visually-distinct icon when mode is set to HSP
 - [x] set profile to HSP when mode is HSP
-- [ ] set default sink when profile is set to HSP
-- [ ] set default source when profile is set to HSP
+- [x] set default sink when profile is set to HSP
+- [x] set default source when profile is set to HSP
 
 - [ ] create a notification on toggle
 - [ ] create a notification on connect
