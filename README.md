@@ -37,11 +37,11 @@ MVP features:
 - [x] set default sink when profile is set to HSP
 - [x] set default source when profile is set to HSP
 
-- [ ] create a notification on toggle
-- [ ] create a notification on connect
-- [ ] create a notification on disconnect
+- [x] create a notification on toggle
+- [x] create a notification on disconnect
 
 
 non-MVP features:
 
-- display special icon if no bt adapter is detected (see blueberry applet.js)
+- detect when profile is changed outside of the applet
+- don't send so many notifications!

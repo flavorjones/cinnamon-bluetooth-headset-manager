@@ -1,3 +1,13 @@
+//
+// This file contains code based on and borrowed from:
+//
+//   http://developer.linuxmint.com/reference/git/cinnamon-tutorials/index.html
+//     (no apparent license)
+//
+//   https://github.com/linuxmint/blueberry
+//     (GPLv3)
+//
+
 const Applet = imports.ui.applet;
 const GnomeBluetooth = imports.gi.GnomeBluetooth;
 const Lang = imports.lang;
@@ -48,7 +58,7 @@ BluetoothHeadsetManager.prototype = {
     "hsp": {
       "name": "hsp",
       "tooltip": "HSP",
-      "icon": "audio-headset-symbolic",
+      "icon": "audio-headset",
       "profile-name": "headset_head_unit",
       "has-source": true,
     }
@@ -59,6 +69,10 @@ BluetoothHeadsetManager.prototype = {
     if (relevant_device == null) {
       this.set_applet_enabled(false);
       this._mode = null ;
+
+      let command = ["notify-send", "--expire-time=1000", "--category=device", "--urgency=low", "--icon=audio-headphones", "'Headphones have been disconnected.'"];
+      Util.spawnCommandLine(command.join(" "));
+
       return;
     }
 
@@ -76,6 +90,7 @@ BluetoothHeadsetManager.prototype = {
     this._cmdCardProfile(this._mode, relevant_device, commands);
     this._cmdDefaultSink(this._mode, relevant_device, commands);
     this._cmdDefaultSource(this._mode, relevant_device, commands);
+    this._cmdNotify(this._mode, relevant_device, commands);
 
     for (var j in commands) {
       global.log("CMD: '" + commands[j] + "'");
@@ -159,6 +174,13 @@ BluetoothHeadsetManager.prototype = {
     let address = relevant_device[1];
     let source_name = "bluez_source." + address.replace(/:/g, "_") + "." + mode["profile-name"];
     let command = ["pacmd", "set-default-source", source_name];
+    commands.push(command.join(" "));
+    return;
+  },
+
+  _cmdNotify: function(mode, relevant_device, commands) {
+    let name = relevant_device[0];
+    let command = ["notify-send", "--expire-time=1000", "--category=device", "--urgency=low", "--icon=" + mode["icon"], "'" + name + "'", "'Profile bas been set to " + mode["tooltip"] + "'"];
     commands.push(command.join(" "));
     return;
   },
