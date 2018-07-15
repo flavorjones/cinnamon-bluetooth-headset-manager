@@ -1,11 +1,10 @@
 # Cinnamon bluetooth-headset-manager
 
-This repository contains the code and development tools for a [Cinnamon][] [applet][] to manage the [BluetoothⓇ][] [profile][] for a connected headset.
-
+This repository contains the code and development tools for a [Cinnamon][] [applet][] to manage the [Bluetooth][] [profile][] for a connected headset.
 
   [Cinnamon]: https://en.wikipedia.org/wiki/Cinnamon_(software)
   [applet]: https://cinnamon-spices.linuxmint.com/applets
-  [BluetoothⓇ]: https://en.wikipedia.org/wiki/Bluetooth
+  [Bluetooth]: https://en.wikipedia.org/wiki/Bluetooth
   [profile]: https://en.wikipedia.org/wiki/List_of_Bluetooth_profiles
 
 
@@ -24,19 +23,30 @@ If this seems like a pretty short list of features, it's also an achievable set 
 learn:
 
 - [x] how to list connected, paired, trusted bluetooth devices
-- [ ] how to get notified when bluetooth devices are added/leave
-  - see blueberry/usr/share/cinnamon/applets/blueberry@cinnamon.org/applet.js
-
-- [ ] how to list available profiles for the devices
-  - maybe look at Cinnamon/files/usr/share/cinnamon/cinnamon-settings/modules/cs_sound.py
-  - Cvc → MixerCard →
-    https://lazka.github.io/pgi-docs/Cvc-1.0/classes/MixerCard.html#Cvc.MixerCard.get_profiles
-    https://lazka.github.io/pgi-docs/Cvc-1.0/classes/MixerCardProfile.html#Cvc.MixerCardProfile
-
-    and check out sound150@claudiux/files/sound150@claudiux/3.4/applet.js to see how to use Cvc
-
-- [ ] how to set a profile for a device
-
-- [ ] how to show/hide the icon (depending on connected devices)
-- [ ] how to change the icon
+- [x] how to get notified when bluetooth devices are added/leave
+- [x] how to set a profile for a device
+- [x] how to show/hide the icon (depending on connected devices)
+- [x] how to change the icon
 - [x] how to get notified when user clicks
+
+
+MVP features:
+
+- [ ] enabled when a bluetooth headset is connected
+- [ ] disabled when no bluetooth headset is connected
+
+- [ ] set profile to A2DP when a headset is connected
+- [ ] set default sink when profile is set to A2DP
+- [ ] display visually-distinct icon when profile is set to A2DP
+- [ ] display tooltip when profile is set to A2DP
+
+- [ ] set profile to HSP when icon is clicked
+- [ ] set default sink when profile is set to HSP
+- [ ] set default source when profile is set to HSP
+- [ ] display visually-distinct icon when profile is set to HSP
+- [ ] display tooltip when profile is set to HSP
+
+
+non-MVP features:
+
+- display special icon if no bt adapter is detected (see blueberry applet.js)
