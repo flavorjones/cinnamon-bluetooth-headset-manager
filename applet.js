@@ -23,21 +23,25 @@ BluetoothHeadsetManager.prototype = {
   },
 
   on_applet_clicked: function() {
-    this._setState();
+    this._setState(true);
   },
 
   _mode: null,
 
   _modes: {
     "a2dp": {
+      "name": "a2dp",
       "tooltip": "A2DP",
+      "icon": "audio-headphones",
     },
     "hsp": {
+      "name": "hsp",
       "tooltip": "HSP",
+      "icon": "audio-headset-symbolic",
     }
   },
 
-  _setState: function() {
+  _setState: function(toggle) {
     let relevant_device = this._relevantPairedDevice();
     if (relevant_device == null) {
       this.set_applet_enabled(false);
@@ -45,13 +49,17 @@ BluetoothHeadsetManager.prototype = {
       return;
     }
 
-    if (this._mode == null || this._mode == this._modes["hsp"]) {
+    if (this._mode == null) {
       this._mode = this._modes["a2dp"];
-    } else {
-      this._mode = this._modes["hsp"];
+    } else if (toggle == true) {
+      if (this._mode["name"] == "hsp") {
+        this._mode = this._modes["a2dp"];
+      } else {
+        this._mode = this._modes["hsp"];
+      }
     }
     this.set_applet_tooltip(relevant_device[0] + ": " + this._mode["tooltip"]);
-    this.set_applet_icon_name("audio-headphones");
+    this.set_applet_icon_symbolic_name(this._mode["icon"]);
     this.set_applet_enabled(true);
   },
 

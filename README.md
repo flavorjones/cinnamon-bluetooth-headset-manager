@@ -28,15 +28,14 @@ MVP features:
 - [x] set mode to A2DP when a headset is connected, set tooltip
 - [x] set mode to HSP when icon is clicked, set tooltip
 
+- [x] display visually-distinct icon when mode is set to A2DP
 - [ ] set profile to A2DP when mode is A2DP
 - [ ] set default sink when profile is set to A2DP
-- [ ] display visually-distinct icon when profile is set to A2DP
 
+- [x] display visually-distinct icon when mode is set to HSP
 - [ ] set profile to HSP when mode is HSP
 - [ ] set default sink when profile is set to HSP
 - [ ] set default source when profile is set to HSP
-- [ ] display visually-distinct icon when profile is set to HSP
-- [ ] display tooltip when profile is set to HSP
 
 
 non-MVP features:
