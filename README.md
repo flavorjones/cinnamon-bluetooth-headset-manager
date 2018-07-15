@@ -10,15 +10,27 @@ This repository contains the code and development tools for a [Cinnamon][] [appl
 
 ## Features
 
-Please keep in mind that in the spirit of Readme-driven-development, this list of features is aspirational until a 1.0 release is made.
+The applet is disabled until a bluetooth headset or headphones are connected and paired.
 
-* detect when a Bluetooth headset is connected (make an applet icon visible)
-* provide one-click toggling between A2DP (stereo listening) and HSP (mic + mono) modes
+When an applicable device is connected and paired, a "headphones" icon appears to indicate they're connected, and the applet:
 
-If this seems like a pretty short list of features, it's also an achievable set of features for a 1.0 release.
+* sets the A2DP profile for the device,
+* sets the device as the default sink,
+* and posts a desktop notification.
+
+Clicking on the icon will toggle between A2DP (stereo headphones) and HSP (headset with mic) profiles.
+
+When switched to HSP mode, the icon will appear as a "headset", and the applet:
+
+* sets the HSP profile for the device,
+* sets the device as the default sink,
+* sets the device as the default source,
+* and posts a desktop notification.
 
 
 ## Installation
+
+You'll need `jq` installed.
 
 1. Clone this repo
 2. `make install`
@@ -29,27 +41,6 @@ To uninstall:
 
 
 ## TODO
-
-MVP features:
-
-- [x] enabled when a bluetooth headset is connected
-- [x] disabled when no bluetooth headset is connected
-
-- [x] set mode to A2DP when a headset is connected, set tooltip
-- [x] set mode to HSP when icon is clicked, set tooltip
-
-- [x] display visually-distinct icon when mode is set to A2DP
-- [x] set profile to A2DP when mode is A2DP
-- [x] set default sink when profile is set to A2DP
-
-- [x] display visually-distinct icon when mode is set to HSP
-- [x] set profile to HSP when mode is HSP
-- [x] set default sink when profile is set to HSP
-- [x] set default source when profile is set to HSP
-
-- [x] create a notification on toggle
-- [x] create a notification on disconnect
-
 
 non-MVP features:
 
