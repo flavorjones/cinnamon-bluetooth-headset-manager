@@ -1,6 +1,7 @@
 const Applet = imports.ui.applet;
 const GnomeBluetooth = imports.gi.GnomeBluetooth;
 const Lang = imports.lang;
+const Util = imports.misc.util;
 
 function BluetoothHeadsetManager(metadata, orientation, panel_height, instance_id) {
   this._init(metadata, orientation, panel_height, instance_id);
@@ -33,11 +34,13 @@ BluetoothHeadsetManager.prototype = {
       "name": "a2dp",
       "tooltip": "A2DP",
       "icon": "audio-headphones",
+      "profile-name": "a2dp_sink",
     },
     "hsp": {
       "name": "hsp",
       "tooltip": "HSP",
       "icon": "audio-headset-symbolic",
+      "profile-name": "headset_head_unit",
     }
   },
 
@@ -58,6 +61,9 @@ BluetoothHeadsetManager.prototype = {
         this._mode = this._modes["hsp"];
       }
     }
+
+    this._setCardProfile(this._mode, relevant_device);
+
     this.set_applet_tooltip(relevant_device[0] + ": " + this._mode["tooltip"]);
     this.set_applet_icon_symbolic_name(this._mode["icon"]);
     this.set_applet_enabled(true);
@@ -110,6 +116,14 @@ BluetoothHeadsetManager.prototype = {
 
     return connected_devices;
   },
+
+  _setCardProfile: function(mode, relevant_device) {
+    let address = relevant_device[1];
+    let card_name = "bluez_card." + address.replace(/:/g, "_");
+    let command = ["pacmd", "set-card-profile", card_name, mode["profile-name"]];
+    global.log(JSON.stringify(command));
+    Util.spawn(command);
+  }
 }
 
 function main(metadata, orientation, panel_height, instance_id) {
