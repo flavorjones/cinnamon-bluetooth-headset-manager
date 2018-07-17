@@ -65,13 +65,17 @@ BluetoothHeadsetManager.prototype = {
   },
 
   _setState: function(toggle) {
+    let previous_mode = this._mode;
     let relevant_device = this._relevantPairedDevice();
+
     if (relevant_device == null) {
       this.set_applet_enabled(false);
       this._mode = null ;
 
-      let command = ["notify-send", "--expire-time=1000", "--category=device", "--urgency=low", "--icon=audio-headphones", "'Headphones have been disconnected.'"];
-      Util.spawnCommandLine(command.join(" "));
+      if (previous_mode != this._mode) {
+        let command = ["notify-send", "--expire-time=1000", "--category=device", "--urgency=low", "--icon=audio-headphones", "'Headphones have been disconnected.'"];
+        Util.spawnCommandLine(command.join(" "));
+      }
 
       return;
     }
@@ -86,21 +90,23 @@ BluetoothHeadsetManager.prototype = {
       }
     }
 
-    let commands = new Array()
-    this._cmdCardProfile(this._mode, relevant_device, commands);
-    this._cmdDefaultSink(this._mode, relevant_device, commands);
-    this._cmdDefaultSource(this._mode, relevant_device, commands);
-    this._cmdNotify(this._mode, relevant_device, commands);
+    if (previous_mode != this._mode) {
+      let commands = new Array()
+      this._cmdCardProfile(this._mode, relevant_device, commands);
+      this._cmdDefaultSink(this._mode, relevant_device, commands);
+      this._cmdDefaultSource(this._mode, relevant_device, commands);
+      this._cmdNotify(this._mode, relevant_device, commands);
 
-    for (var j in commands) {
-      global.log("CMD: '" + commands[j] + "'");
-      Util.spawnCommandLine(commands[j]);
-      _sleep(100);
+      for (var j in commands) {
+        global.log("CMD: '" + commands[j] + "'");
+        Util.spawnCommandLine(commands[j]);
+        _sleep(100);
+      }
+
+      this.set_applet_tooltip(relevant_device[0] + ": " + this._mode["tooltip"]);
+      this.set_applet_icon_symbolic_name(this._mode["icon"]);
+      this.set_applet_enabled(true);
     }
-
-    this.set_applet_tooltip(relevant_device[0] + ": " + this._mode["tooltip"]);
-    this.set_applet_icon_symbolic_name(this._mode["icon"]);
-    this.set_applet_enabled(true);
   },
 
   _relevantPairedDevice: function() {
