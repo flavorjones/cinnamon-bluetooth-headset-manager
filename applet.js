@@ -186,7 +186,7 @@ BluetoothHeadsetManager.prototype = {
 
   _cmdNotify: function(mode, relevant_device, commands) {
     let name = relevant_device[0];
-    let command = ["notify-send", "--expire-time=1000", "--category=device", "--urgency=low", "--icon=" + mode["icon"], "'" + name + "'", "'Profile bas been set to " + mode["tooltip"] + "'"];
+    let command = ["notify-send", "--expire-time=1000", "--category=device", "--urgency=low", "--icon=" + mode["icon"], "'" + name + "'", "'Profile has been set to " + mode["tooltip"] + "'"];
     commands.push(command.join(" "));
     return;
   },
