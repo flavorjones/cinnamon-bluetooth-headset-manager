@@ -30,7 +30,7 @@ When switched to HSP mode, the icon will appear as a "headset", and the applet:
 
 ## Installation
 
-You'll need `jq` installed.
+You'll need `jq` installed to package this up.
 
 1. Clone this repo
 2. `make install`
@@ -38,11 +38,3 @@ You'll need `jq` installed.
 To uninstall:
 
 1. `make uninstall`
-
-
-## TODO
-
-non-MVP features:
-
-- detect when profile is changed outside of the applet
-- don't send so many notifications!
